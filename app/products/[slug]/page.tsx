@@ -13,12 +13,40 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <SiteHeader />
       <main className="container shell">
         <section className="card" style={{ padding: 24, display: "grid", gap: 24, gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
-          <img src={product.image_url} alt={product.name} style={{ width: "100%", borderRadius: 22, minHeight: 420, objectFit: "cover" }} />
+          <div style={{ display: "grid", gap: 14 }}>
+            <div style={{ position: "relative", overflow: "hidden", borderRadius: 26, background: "linear-gradient(180deg, rgba(27,23,20,0.05), rgba(27,23,20,0.12))" }}>
+              <img
+                src={product.image_url}
+                alt={product.name}
+                style={{
+                  width: "100%",
+                  display: "block",
+                  minHeight: 460,
+                  objectFit: "cover",
+                  objectPosition: "center top",
+                  transform: "scale(1.01)",
+                }}
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0.08), transparent 28%, rgba(0,0,0,0.06) 100%)", pointerEvents: "none" }} />
+            </div>
+            {(product.gallery_image_urls?.length ?? 0) > 0 && (
+              <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))" }}>
+                {product.gallery_image_urls?.map((image, index) => (
+                  <img
+                    key={`${product.slug}-gallery-${index}`}
+                    src={image}
+                    alt={`${product.name} gallery ${index + 1}`}
+                    style={{ width: "100%", aspectRatio: "3 / 4", borderRadius: 18, objectFit: "cover", objectPosition: "center top" }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
           <div style={{ display: "grid", alignContent: "start", gap: 14 }}>
             <p className="muted" style={{ margin: 0 }}>{product.category}</p>
             <h1 style={{ margin: 0, fontSize: 44, lineHeight: 1.05 }}>{product.name}</h1>
             <p className="muted" style={{ fontSize: 18, lineHeight: 1.7 }}>{product.description}</p>
-            <strong style={{ fontSize: 28 }}>${(product.price_cents / 100).toFixed(2)}</strong>
+            <strong style={{ fontSize: 28 }}>₹{(product.price_cents / 100).toFixed(2)}</strong>
             <p className="muted">Stock: {product.stock}</p>
             <AddToCartButton productId={product.id} />
             <a href="/checkout" className="btn secondary" style={{ width: "fit-content" }}>Go to checkout</a>

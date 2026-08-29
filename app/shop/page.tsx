@@ -16,7 +16,7 @@ export default async function ShopPage() {
                 <img src={product.image_url} alt={product.name} style={{ width: "100%", height: 240, objectFit: "cover", borderRadius: 18 }} />
                 <h3 style={{ marginBottom: 8 }}>{product.name}</h3>
                 <p className="muted" style={{ minHeight: 44 }}>{product.description}</p>
-                <strong>${(product.price_cents / 100).toFixed(2)}</strong>
+                <strong>₹{(product.price_cents / 100).toFixed(2)}</strong>
               </Link>
             ))}
           </div>

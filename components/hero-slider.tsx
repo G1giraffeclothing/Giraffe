@@ -8,7 +8,7 @@ type Slide = {
   title: string;
   subtitle: string;
   desktopImage: StaticImageData;
-  mobileImage: StaticImageData;
+  mobileImage: StaticImageData | string;
   href: string;
   cta: string;
 };
@@ -40,7 +40,7 @@ export function HeroSlider({ slides }: { slides: Slide[] }) {
               aria-hidden={!active}
             >
               <picture className="hero-media">
-                <source media="(max-width: 768px)" srcSet={slide.mobileImage.src} />
+                <source media="(max-width: 767px)" srcSet={typeof slide.mobileImage === "string" ? slide.mobileImage : slide.mobileImage.src} />
                 <Image src={slide.desktopImage} alt={slide.title} fill priority sizes="100vw" style={{ objectFit: "cover" }} />
               </picture>
               <div className="hero-overlay" />
@@ -49,7 +49,6 @@ export function HeroSlider({ slides }: { slides: Slide[] }) {
         })}
 
         <div className="hero-content">
-          <span className="pill hero-pill">Giraffe Clothing</span>
           <h1 className="hero-title">{current.title}</h1>
           <p className="hero-copy">{current.subtitle}</p>
           <div className="hero-cta-row">
