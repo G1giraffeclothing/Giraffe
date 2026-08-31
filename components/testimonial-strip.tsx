@@ -15,9 +15,9 @@ const testimonials = [
 
 export function TestimonialStrip() {
   return (
-    <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+    <div className="testimonial-strip">
       {testimonials.map((item) => (
-        <div key={item.name} className="soft-card" style={{ padding: 20 }}>
+        <div key={item.name} className="testimonial-strip-item">
           <p style={{ marginTop: 0, lineHeight: 1.7 }}>"{item.quote}"</p>
           <strong>{item.name}</strong>
         </div>
