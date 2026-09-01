@@ -8,8 +8,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json().catch(() => null) as { productId?: string; quantity?: number } | null;
+  const body = await request.json().catch(() => null) as { productId?: string; size?: string; quantity?: number } | null;
   const productId = body?.productId;
+  const size = body?.size?.trim() || undefined;
   const quantity = Math.max(1, body?.quantity ?? 1);
 
   if (!productId) {
@@ -17,10 +18,10 @@ export async function POST(request: Request) {
   }
 
   const cart = await getCart(userId);
-  const existing = cart.find((item) => item.productId === productId);
+  const existing = cart.find((item) => item.productId === productId && item.size === size);
   const nextCart = existing
-    ? cart.map((item) => item.productId === productId ? { ...item, quantity: item.quantity + quantity } : item)
-    : [...cart, { productId, quantity }];
+    ? cart.map((item) => item.productId === productId && item.size === size ? { ...item, quantity: item.quantity + quantity } : item)
+    : [...cart, { productId, size, quantity }];
 
   await setCart(userId, nextCart);
   return NextResponse.json({ ok: true, cart: nextCart });
