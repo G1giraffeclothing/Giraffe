@@ -1,180 +1,103 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HeroSlider } from "@/components/hero-slider";
-import { PremiumProductCard } from "@/components/premium-product-card";
+import { ProductRail } from "@/components/product-rail";
 import { CategoryGrid } from "@/components/category-grid";
 import { SiteHeader } from "@/components/site-header";
-import { TestimonialStrip } from "@/components/testimonial-strip";
-import { TrustStrip } from "@/components/trust-strip";
+import { PromiseSection } from "@/components/promise-section";
 import { getProducts } from "@/lib/data";
-import { heroSlides } from "@/lib/assets";
+import { heroSlides, loyalCollection, luxeEdit, materialCards, trendingCollections } from "@/lib/assets";
+import { RevealText } from "@/components/motion-system";
 
 export default async function HomePage() {
   const products = await getProducts();
-  const featured = products.filter((product) => product.is_featured).slice(0, 4);
-  const bestSellers = products.slice(0, 4);
-  const campaignImage = heroSlides[2]?.desktopImage ?? heroSlides[0].desktopImage;
-  const signatureImage = heroSlides[1]?.desktopImage ?? heroSlides[0].desktopImage;
+  const featured = products.filter((product) => product.is_featured).slice(0, 6);
+  const bestSellers = products.slice(2, 8);
 
   return (
     <>
-      <div className="sale-bar">
-        <div className="sale-track">
-          <span className="sale-item">ANNIVERSARY SALE - NEW RELEASES LIVE NOW - FREE SHIPPING ABOVE RS. 999</span>
-          <span className="sale-item" aria-hidden="true">ANNIVERSARY SALE - NEW RELEASES LIVE NOW - FREE SHIPPING ABOVE RS. 999</span>
-        </div>
-      </div>
       <SiteHeader />
       <main className="homepage">
         <HeroSlider slides={heroSlides as unknown as Parameters<typeof HeroSlider>[0]["slides"]} />
 
-        <section className="home-section home-section--warm">
+        <section className="home-section home-section--light home-section--arrivals">
           <div className="home-section-inner">
-            <div className="section-headline-row">
-              <div>
-                <span className="editorial-kicker">01 / New releases</span>
-                <h2 className="section-title section-title-large">Shop new releases before they sell through.</h2>
-              </div>
-              <Link href="/shop?category=trousers" className="section-link">Shop all</Link>
+            <div className="section-headline-row arrivals-heading">
+              <div><h2 className="section-title section-title-large home-section-heading"><RevealText>New Arrivals</RevealText></h2></div>
+              <Link href="/shop?section=new" className="section-link">Shop new</Link>
             </div>
-            <div className="product-rail">
-              <div className="product-rail-track">
-                {featured.map((product, index) => (
-                  <PremiumProductCard key={product.id} product={product} index={index} />
-                ))}
-              </div>
-            </div>
+            <ProductRail products={featured} />
           </div>
         </section>
 
-        <section className="home-section home-section--bleed home-section--neutral">
+        <section className="home-section home-section--sand home-section--categories">
           <div className="home-section-inner home-section-inner--wide">
-            <div className="section-headline-row section-headline-row--stack-mobile">
-              <div>
-                <span className="editorial-kicker">02 / Shop by category</span>
-                <h2 className="section-title section-title-large">Large visual category tiles, arranged like campaign frames.</h2>
-              </div>
-              <Link href="/shop" className="section-link">Explore all</Link>
+            <div className="section-headline-row categories-heading">
+              <div><h2 className="section-title section-title-large home-section-heading"><RevealText>Shop by Category</RevealText></h2></div>
+              <Link href="/shop" className="section-link">View all</Link>
             </div>
             <CategoryGrid />
           </div>
         </section>
 
-        <section className="home-campaign">
-          <Image src={campaignImage} alt="Giraffe campaign" fill sizes="100vw" className="home-campaign-image" priority={false} />
-          <div className="home-campaign-overlay" />
-          <div className="home-campaign-copy">
-            <span className="editorial-kicker">03 / Editorial break</span>
-            <h2>Stand above the ordinary.</h2>
-            <p>Sharp silhouettes, refined fabrics, and modern menswear designed to feel confident in every frame.</p>
-            <Link href="/shop" className="btn">Shop the edit</Link>
-          </div>
+        <section className="home-feature home-feature--luxe">
+          <div className="home-feature-media"><Image src={luxeEdit} alt="Giraffe Premium Luxe Collection" fill sizes="55vw" /></div>
+          <div className="home-feature-copy"><h2 className="section-title"><RevealText>Giraffe Luxe Collection</RevealText></h2><Link href="/shop?collection=luxe" className="btn">Explore the Luxe Edit <span aria-hidden="true">→</span></Link></div>
         </section>
 
-        <section className="home-section home-section--warm">
-          <div className="home-section-inner">
-            <div className="section-headline-row">
-              <div>
-                <span className="editorial-kicker">04 / Best sellers</span>
-                <h2 className="section-title section-title-large">Products that deserve the spotlight.</h2>
-              </div>
-            </div>
-            <div className="product-rail">
-              <div className="product-rail-track">
-                {bestSellers.map((product, index) => (
-                  <PremiumProductCard key={product.id} product={product} index={index} compact />
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="home-section home-section--split">
+        <section className="home-section home-section--light home-section--latest">
           <div className="home-section-inner home-section-inner--wide">
-            <div className="signature-story">
-              <div className="signature-story-media">
-                <Image src={signatureImage} alt="Giraffe signature collection" fill sizes="(max-width: 768px) 100vw, 50vw" className="signature-story-image" />
-              </div>
-              <div className="signature-story-copy">
-                <span className="editorial-kicker">05 / Signature collection</span>
-                <h2 className="section-title section-title-large">Quiet luxury for the modern menswear wardrobe.</h2>
-                <p className="section-copy">Tailored forms, clean silhouettes, and a restrained palette that feels confident in every frame. Designed to look sharp without trying too hard.</p>
-                <Link href="/shop" className="btn" style={{ width: "fit-content" }}>Shop signature</Link>
-              </div>
+            <div className="section-headline-row"><div><h2 className="section-title section-title-large"><RevealText>Trending Collections</RevealText></h2></div><Link href="/shop?section=new" className="section-link">Discover trending</Link></div>
+            <div className="latest-collection-grid">
+              <Link href="/shop?collection=linen" className="latest-collection-card"><Image src={trendingCollections[0]} alt="Trending linen collection" fill sizes="33vw" /></Link>
+              <Link href="/shop?collection=after-hours" className="latest-collection-card"><Image src={trendingCollections[1]} alt="Trending after-hours collection" fill sizes="33vw" /></Link>
+              <Link href="/shop?collection=signature" className="latest-collection-card"><Image src={trendingCollections[2]} alt="Trending signature collection" fill sizes="33vw" /></Link>
             </div>
           </div>
         </section>
 
-        <section className="home-section home-section--neutral">
-          <div className="home-section-inner home-section-inner--narrow">
-            <div className="section-headline-row">
-              <div>
-                <span className="editorial-kicker">06 / Brand statement</span>
-                <h2 className="section-title section-title-large">Made for those who stand above the ordinary.</h2>
-              </div>
-            </div>
-            <TrustStrip />
-            <div className="testimonial-band">
-              <TestimonialStrip />
-            </div>
-          </div>
-        </section>
-
-        <section className="home-section home-section--warm">
+        <section className="home-section home-section--materials">
           <div className="home-section-inner home-section-inner--wide">
-            <div className="section-headline-row">
-              <div>
-                <span className="editorial-kicker">07 / Instagram</span>
-                <h2 className="section-title section-title-large">A social layer for the brand story.</h2>
-              </div>
-              <Link href="https://instagram.com" target="_blank" className="section-link">Follow Instagram</Link>
+            <div className="section-headline-row materials-heading"><div><h2 className="section-title section-title-large home-section-heading"><RevealText>The Giraffe Fabric Edit</RevealText></h2></div></div>
+            <div className="materials-grid">
+              <Link href="/shop?collection=tailoring" className="material-card"><Image src={materialCards[0]} alt="Modern Monochrome" fill sizes="(max-width: 768px) 100vw, 33vw" /><span>Modern Monochrome</span></Link>
+              <Link href="/shop?collection=linen" className="material-card"><Image src={materialCards[1]} alt="The Linen Edit" fill sizes="(max-width: 768px) 100vw, 33vw" /><span>The Linen Edit</span></Link>
+              <Link href="/shop?collection=layers" className="material-card"><Image src={materialCards[2]} alt="Weekend Tailoring" fill sizes="(max-width: 768px) 100vw, 33vw" /><span>Weekend Tailoring</span></Link>
             </div>
-            <div className="social-strip">
-              {["1", "2", "3", "4"].map((item) => (
-                <div key={item} className="social-strip-item">
-                  <Image
-                    src={`/products/trousers/GFC-TRS-00${item === "4" ? "4" : item}/01-hanging.png`}
-                    alt="Instagram preview"
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    className="social-strip-image"
-                  />
-                </div>
-              ))}
-            </div>
+            <Link href="/shop?collection=essentials" className="btn materials-cta">Explore essentials <span aria-hidden="true">→</span></Link>
           </div>
         </section>
 
-        <section className="home-section home-section--neutral">
+        <section className="home-section home-section--light home-section--best-sellers">
+          <div className="home-section-inner"><div className="section-headline-row"><div><h2 className="section-title section-title-large"><RevealText>Shop Best Sellers</RevealText></h2></div><Link href="/shop?section=bestsellers" className="section-link">Shop best sellers</Link></div><ProductRail products={bestSellers} /></div>
+        </section>
+
+        <section className="home-section home-section--dark home-loyalty">
+          <Image className="home-loyalty-image" src={loyalCollection} alt="Giraffe Loyal Collection" fill sizes="100vw" />
+          <div className="home-loyalty-overlay" aria-hidden="true" />
+          <div className="home-section-inner home-section-inner--narrow"><div className="loyalty-lockup"><h2 className="section-title section-title-large"><RevealText>The Giraffe Loyal Collection</RevealText></h2><Link href="/shop?collection=loyal" className="btn">Join the circle</Link></div></div>
+        </section>
+
+        <section className="home-section home-section--about"><div className="home-section-inner home-section-inner--narrow about-lockup"><h2 className="section-title section-title-large"><RevealText>About Giraffe</RevealText></h2><Link href="/about" className="btn secondary">Our story</Link></div></section>
+
+        <section className="home-section home-section--light home-instagram">
           <div className="home-section-inner home-section-inner--wide">
-            <div className="about-split">
-              <div className="about-split-copy">
-                <span className="editorial-kicker">08 / About Giraffe</span>
-                <h2 className="section-title section-title-large">Premium everyday wear with a clean modern identity.</h2>
-                <p className="section-copy">We design pieces that feel sharp, wearable, and built for real life. Modern fits, thoughtful fabric choices, and a strong menswear point of view.</p>
-                <Link href="/about" className="btn secondary" style={{ width: "fit-content" }}>Learn more</Link>
-              </div>
-              <div className="about-split-media">
-                <Image src={heroSlides[0].desktopImage} alt="About Giraffe Clothing" fill sizes="(max-width: 768px) 100vw, 50vw" className="about-split-image" />
-              </div>
-            </div>
+            <div className="section-headline-row"><div><h2 className="section-title section-title-large"><RevealText>Instagram</RevealText></h2></div><Link href="https://www.instagram.com/giraffeclothing.in/" target="_blank" rel="noreferrer" className="section-link">@giraffeclothing.in</Link></div>
+            <div className="instagram-grid">{[...Array(12)].map((_, index) => { const slide = heroSlides[index % heroSlides.length]; return <Link href="https://www.instagram.com/giraffeclothing.in/" target="_blank" rel="noreferrer" className="instagram-tile" key={`${slide.title}-${index}`} aria-label={`Open Giraffe Clothing Instagram post ${index + 1}`}><Image src={slide.desktopImage} alt="Giraffe Clothing on Instagram" fill sizes="(max-width: 768px) 50vw, 16.66vw" /><span className="instagram-tile-overlay" aria-hidden="true">↗</span></Link>; })}</div>
           </div>
         </section>
 
-        <section className="home-section home-section--newsletter">
-          <div className="home-section-inner home-section-inner--narrow">
-            <div className="newsletter-band">
-              <div>
-                <span className="editorial-kicker">09 / Newsletter</span>
-                <h2 className="section-title section-title-large">Get first access to new drops, campaign stories, and limited releases.</h2>
-              </div>
-              <form className="newsletter-form">
-                <input className="input" type="email" placeholder="Enter your email" aria-label="Email address" />
-                <button className="btn" type="button">Subscribe</button>
-              </form>
-            </div>
+        <PromiseSection />
+
+        <footer className="footer-end">
+          <div className="footer-end-inner footer-end-grid">
+            <div><strong>Giraffe Clothing</strong><p>Modern menswear with a considered point of view.</p></div>
+            <div><strong>Shop</strong><p><Link href="/shop">All products</Link><br /><Link href="/shop?section=new">New arrivals</Link><br /><Link href="/shop?section=bestsellers">Best sellers</Link></p></div>
+            <div><strong>About</strong><p><Link href="/about">Our story</Link><br /><Link href="/about">Contact</Link><br /><Link href="/about">Shipping &amp; returns</Link></p></div>
+            <div><strong>Stay connected</strong><p>New drops and considered essentials, delivered occasionally.</p><form className="footer-newsletter"><input type="email" placeholder="Your email address" aria-label="Email address" /><button type="button" aria-label="Subscribe">→</button></form></div>
           </div>
-        </section>
+          <div className="footer-legal"><span>© 2026 Giraffe Clothing. All rights reserved.</span><span><Link href="/about">Privacy policy</Link> · <Link href="/about">Terms &amp; conditions</Link></span></div>
+        </footer>
       </main>
     </>
   );

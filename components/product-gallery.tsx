@@ -3,6 +3,7 @@
 import Image from "next/image";
 import type { TouchEvent } from "react";
 import { useMemo, useState } from "react";
+import { motion } from "motion/react";
 
 type ProductGalleryProps = {
   images: string[];
@@ -45,14 +46,11 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
     <div className="product-gallery">
       <div className="product-gallery-main" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
         {safeImages.map((image, index) => (
-          <div
+          <motion.div
             key={`${title}-gallery-${index}`}
             className="product-gallery-layer"
-            style={{
-              opacity: index === activeIndex ? 1 : 0,
-              transition: "opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1)",
-              transform: index === activeIndex ? "scale(1.01)" : "scale(1)",
-            }}
+            animate={{ opacity: index === activeIndex ? 1 : 0, scale: index === activeIndex ? 1.01 : 1 }}
+            transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
             aria-hidden={index !== activeIndex}
           >
             <Image
@@ -63,7 +61,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               className="product-gallery-image"
               draggable={false}
             />
-          </div>
+          </motion.div>
         ))}
 
         <div className="product-gallery-counter">

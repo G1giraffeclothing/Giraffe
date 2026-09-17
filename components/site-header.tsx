@@ -3,10 +3,11 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { brandLogo } from "@/lib/assets";
-import desktopSlide1 from "../Website Stuffs/Desktop Slide 1.png";
-import desktopSlide2 from "../Website Stuffs/Desktop Slide 2.png";
-import desktopSlide3 from "../Website Stuffs/Desktop Slide 3.png";
+import desktopSlide1 from "../Website Stuffs/Desktop Slide 1 Changed version .png";
+import desktopSlide2 from "../Website Stuffs/Desktop slide2 changed version.png";
+import desktopSlide3 from "../Website Stuffs/Desktop slide 3 changed version .png";
 
 type DesktopMenuKey = "shop-men" | "collections" | "journal" | "world";
 
@@ -51,10 +52,10 @@ const collectionLinks = [
 ];
 
 const journalLinks = [
-  { label: "Style Guides", href: "/about" },
-  { label: "How to Wear", href: "/about" },
-  { label: "The Giraffe Edit", href: "/about" },
-  { label: "Stories", href: "/about" },
+  { label: "Style Guides", href: "/journal?category=style-guides" },
+  { label: "How to Wear", href: "/journal?category=how-to-wear" },
+  { label: "The Giraffe Edit", href: "/journal?category=giraffe-edit" },
+  { label: "Stories", href: "/journal?category=stories" },
 ];
 
 const worldLinks = [
@@ -93,9 +94,9 @@ const desktopMenuCards: Record<DesktopMenuKey, MenuCard[]> = {
   journal: [
     {
       label: "Featured Story",
-      title: "How to master quiet luxury",
+      title: "The quiet art of dressing well",
       copy: "Thoughtful styling notes and elevated wardrobe ideas.",
-      href: "/about",
+      href: "/journal/giraffe-edit/the-quiet-art-of-dressing-well",
       image: desktopSlide2,
     },
   ],
@@ -431,7 +432,8 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <div className={`site-mega-panel ${activeMenu ? "is-open" : ""}`} aria-hidden={!activeMenu}>
+      <AnimatePresence>
+      {activeMenu ? <motion.div className="site-mega-panel is-open" aria-hidden={false} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}>
         <div className="site-mega-panel-inner">
           {activeMenu === "shop-men" ? (
             <div className="site-mega-layout">
@@ -514,10 +516,13 @@ export function SiteHeader() {
                       {item.label}
                     </Link>
                   ))}
+                  <Link href="/journal" className="site-mega-all" onClick={closeDesktopOverlays}>
+                    View All Journal →
+                  </Link>
                 </div>
               </div>
 
-              <Link href="/about" className="site-mega-quote" onClick={closeDesktopOverlays}>
+              <Link href="/journal/giraffe-edit/the-quiet-art-of-dressing-well" className="site-mega-quote" onClick={closeDesktopOverlays}>
                 <Image src={desktopMenuCards.journal[0].image} alt="How to master quiet luxury" fill sizes="360px" className="site-mega-quote-image" />
                 <div className="site-mega-card-overlay" />
                 <div className="site-mega-quote-content">
@@ -552,9 +557,11 @@ export function SiteHeader() {
             </div>
           ) : null}
         </div>
-      </div>
+      </motion.div> : null}
+      </AnimatePresence>
 
-      <div className={`site-search-overlay ${searchOpen ? "is-open" : ""}`} id="site-search-overlay" aria-hidden={!searchOpen}>
+      <AnimatePresence>
+      {searchOpen ? <motion.div className="site-search-overlay is-open" id="site-search-overlay" aria-hidden={false} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.24 }}>
         <div className="site-overlay-backdrop" onClick={() => setSearchOpen(false)} />
         <section className="site-overlay-panel" aria-label="Search products">
           <button type="button" className="site-overlay-close" onClick={() => setSearchOpen(false)} aria-label="Close search">
@@ -570,11 +577,12 @@ export function SiteHeader() {
             <div>
               <p className="site-overlay-label">Trending searches</p>
               <div className="site-overlay-tags">
-                {searchTrending.map((item) => (
-                  <Link key={item} href="/shop" className="site-overlay-tag" onClick={() => setSearchOpen(false)}>
+                {searchTrending.map((item) => {
+                  const href = item === "Polos" ? "/shop?category=polos" : item === "Linen Shirts" ? "/shop?category=shirts" : item === "Trousers" ? "/shop?category=trousers" : "/shop?section=new";
+                  return <Link key={item} href={href} className="site-overlay-tag" onClick={() => setSearchOpen(false)}>
                     {item}
-                  </Link>
-                ))}
+                  </Link>;
+                })}
               </div>
             </div>
             <div>
@@ -593,11 +601,13 @@ export function SiteHeader() {
             </div>
           </div>
         </section>
-      </div>
+      </motion.div> : null}
+      </AnimatePresence>
 
-      <div className={`site-cart-drawer ${cartOpen ? "is-open" : ""}`} id="site-cart-drawer" aria-hidden={!cartOpen}>
+      <AnimatePresence>
+      {cartOpen ? <motion.div className="site-cart-drawer is-open" id="site-cart-drawer" aria-hidden={false} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.24 }}>
         <div className="site-overlay-backdrop" onClick={() => setCartOpen(false)} />
-        <aside className="site-cart-panel" aria-label="Shopping bag">
+        <motion.aside className="site-cart-panel" aria-label="Shopping bag" initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}>
           <button type="button" className="site-overlay-close" onClick={() => setCartOpen(false)} aria-label="Close bag">
             <IconClose />
           </button>
@@ -614,12 +624,14 @@ export function SiteHeader() {
               Continue shopping
             </Link>
           </div>
-        </aside>
-      </div>
+        </motion.aside>
+      </motion.div> : null}
+      </AnimatePresence>
 
-      <div className={`site-mobile-drawer ${mobileOpen ? "is-open" : ""}`} aria-hidden={!mobileOpen}>
+      <AnimatePresence>
+      {mobileOpen ? <motion.div className="site-mobile-drawer is-open" aria-hidden={false} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.24 }}>
         <div className="site-overlay-backdrop" onClick={closeMobileMenu} />
-        <aside className="site-mobile-panel" aria-label="Mobile navigation">
+        <motion.aside className="site-mobile-panel" aria-label="Mobile navigation" initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }} transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}>
           <div className="site-mobile-panel-top">
             <p>Menu</p>
             <button type="button" className="site-overlay-close" onClick={closeMobileMenu} aria-label="Close menu">
@@ -679,6 +691,9 @@ export function SiteHeader() {
                       {item.label}
                     </Link>
                   ))}
+                  <Link href="/journal" onClick={closeMobileMenu}>
+                    View All Journal →
+                  </Link>
                 </div>
               ) : null}
             </div>
@@ -699,8 +714,9 @@ export function SiteHeader() {
               ) : null}
             </div>
           </nav>
-        </aside>
-      </div>
+        </motion.aside>
+      </motion.div> : null}
+      </AnimatePresence>
     </header>
   );
 }

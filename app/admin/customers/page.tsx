@@ -1,0 +1,8 @@
+import { supabaseAdmin } from "@/lib/supabase";
+
+export default async function CustomersPage() {
+  const result = supabaseAdmin ? await supabaseAdmin.from("store_orders").select("customer_name, email, phone, created_at, total_cents").not("email", "is", null).order("created_at", { ascending: false }) : null;
+  const rows = result?.data ?? [];
+  const customers = Array.from(new Map(rows.map((row) => [row.email, row])).values());
+  return <div className="admin-page"><div className="admin-page-heading"><div><p className="admin-eyebrow">Manage</p><h1>Customers</h1><p className="admin-subtitle">Your customer directory, built from completed orders.</p></div></div><div className="admin-panel admin-table-wrap"><table className="admin-table"><thead><tr><th>Customer</th><th>Contact</th><th>Last order</th><th>Lifetime value</th></tr></thead><tbody>{customers.map((customer) => <tr key={customer.email}><td><div className="admin-product-cell"><span className="order-avatar">{(customer.customer_name ?? "G").slice(0, 1).toUpperCase()}</span><strong>{customer.customer_name ?? "Guest customer"}</strong></div></td><td>{customer.email}<small className="table-subtext">{customer.phone ?? ""}</small></td><td>{new Intl.DateTimeFormat("en-IN", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(customer.created_at))}</td><td><strong>₹{new Intl.NumberFormat("en-IN").format(customer.total_cents / 100)}</strong></td></tr>)}</tbody></table>{!customers.length && <div className="admin-empty"><span className="empty-icon">♙</span><strong>No customers yet</strong><p>Customers will be added automatically when they place an order.</p></div>}</div></div>;
+}

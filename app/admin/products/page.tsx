@@ -1,0 +1,8 @@
+import Link from "next/link";
+import Image from "next/image";
+import { getAdminProducts } from "@/lib/catalog-db";
+
+export default async function AdminProductsPage() {
+  const products = await getAdminProducts();
+  return <div className="admin-page"><div className="admin-page-heading"><div><p className="admin-eyebrow">Catalog</p><h1>Products</h1></div><Link className="admin-primary" href="/admin/products/new">Add product</Link></div><div className="admin-panel admin-table-wrap"><table className="admin-table"><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Price</th><th>Status</th><th>Stock</th><th /></tr></thead><tbody>{products.map((product) => { const image = product.images?.sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order)[0]; const stock = (product.variants ?? []).reduce((sum: number, variant: { stock_quantity: number }) => sum + variant.stock_quantity, 0); return <tr key={product.id}><td><div className="admin-product-cell">{image ? <Image src={image.url} alt="" width={48} height={60} /> : <div className="admin-image-placeholder" />}<span>{product.name}</span></div></td><td>{product.sku}</td><td>{product.category}</td><td>₹{new Intl.NumberFormat("en-IN").format(product.selling_price_cents / 100)}</td><td><span className={`admin-status ${String(product.status).toLowerCase()}`}>{product.status}</span></td><td>{stock}</td><td><Link href={`/admin/products/${product.id}`}>Edit</Link></td></tr>; })}</tbody></table>{products.length === 0 ? <p className="admin-empty">No database products yet. Run the catalog migration from the dashboard.</p> : null}</div></div>;
+}

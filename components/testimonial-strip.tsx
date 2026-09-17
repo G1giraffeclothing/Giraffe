@@ -18,7 +18,7 @@ export function TestimonialStrip() {
     <div className="testimonial-strip">
       {testimonials.map((item) => (
         <div key={item.name} className="testimonial-strip-item">
-          <p style={{ marginTop: 0, lineHeight: 1.7 }}>"{item.quote}"</p>
+          <p style={{ marginTop: 0, lineHeight: 1.7 }}>&ldquo;{item.quote}&rdquo;</p>
           <strong>{item.name}</strong>
         </div>
       ))}

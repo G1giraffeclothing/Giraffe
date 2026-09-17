@@ -1,34 +1,30 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "motion/react";
+import { categoryImages } from "@/lib/assets";
 
 const categories = [
   {
-    title: "Polos",
+    title: "Tees & Henleys",
+    href: "/shop?category=tees",
+    image: categoryImages.tees,
+  },
+  {
+    title: "Polos & Shirts",
     href: "/shop?category=polos",
-    image: "/products/trousers/GFC-TRS-001/01-hanging.png",
-    large: true,
+    image: categoryImages.polos,
   },
   {
-    title: "Trousers",
+    title: "Trousers & Joggers",
     href: "/shop?category=trousers",
-    image: "/products/trousers/GFC-TRS-002/01-hanging.png",
-    large: true,
-  },
-  {
-    title: "Shirts",
-    href: "/shop?category=shirts",
-    image: "/products/trousers/GFC-TRS-003/01-hanging.png",
-    wide: true,
+    image: categoryImages.trousers,
   },
   {
     title: "Sweatshirts & Layers",
-    href: "/shop?category=outerwear",
-    image: "/products/trousers/GFC-TRS-004/01-hanging.png",
-  },
-  {
-    title: "Tees & Henleys",
-    href: "/shop?category=basics",
-    image: "/products/trousers/GFC-TRS-005/01-hanging.png",
+    href: "/shop?category=layers",
+    image: categoryImages.layers,
   },
 ];
 
@@ -36,18 +32,24 @@ export function CategoryGrid() {
   return (
     <div className="category-tiles">
       {categories.map((category) => (
-        <Link
+        <motion.div
           key={category.title}
-          href={category.href}
-          className={`category-tile ${category.large ? "large" : ""} ${category.wide ? "wide" : ""}`}
+          className="category-tile"
+          whileHover={{ y: -3 }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
         >
-          <Image src={category.image} alt={category.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="category-tile-image" />
-          <div className="category-tile-overlay" />
-          <div className="category-tile-body">
-            <span className="editorial-kicker">Shop now</span>
-            <strong>{category.title}</strong>
-          </div>
-        </Link>
+          <Link href={category.href} className="category-tile-link">
+            <motion.div className="category-tile-media" whileHover={{ scale: 1.04, y: -3 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
+              <Image src={category.image} alt={category.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="category-tile-image" />
+            </motion.div>
+            <div className="category-tile-overlay" />
+            <motion.div className="category-tile-body" whileHover={{ y: -2 }}>
+              <span className="editorial-kicker">Shop now</span>
+              <strong>{category.title}</strong>
+              <span className="category-tile-arrow" aria-hidden="true">→</span>
+            </motion.div>
+          </Link>
+        </motion.div>
       ))}
     </div>
   );

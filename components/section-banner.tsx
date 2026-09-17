@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function SectionBanner({
   title,
@@ -25,7 +26,7 @@ export function SectionBanner({
           <Link href={href} className="btn" style={{ width: "fit-content" }}>{cta}</Link>
         </div>
         <div className="banner-image-wrap">
-          <img src={image} alt={title} className="banner-image" />
+          <Image src={image} alt={title} className="banner-image" fill sizes="(max-width: 768px) 100vw, 50vw" />
         </div>
       </div>
     </section>
